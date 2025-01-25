@@ -10,31 +10,38 @@ public class ProductController {
 
 
     private final CreateProductService createProductService;
+    private final GetProductService getProductService;
+    private final UpdateProductService updateProductService;
+    private final DeleteProductService deleteProductService;
 
-    public ProductController(CreateProductService createProductService) {
+    public ProductController(CreateProductService createProductService, GetProductService getProductService, UpdateProductService updateProductService, DeleteProductService deleteProductService) {
         this.createProductService = createProductService;
+        this.getProductService = getProductService;
+        this.updateProductService = updateProductService;
+        this.deleteProductService = deleteProductService;
     }
 
     @PostMapping
     public ResponseEntity<String> createProduct(){
+
         return createProductService.execute(null);
     }
 
     @GetMapping
     public ResponseEntity<String> getProduct(){
 
-        return ResponseEntity.status(HttpStatus.OK).body( "Product retrieved");
+        return getProductService.execute(null);
     }
 
     @PutMapping
     public ResponseEntity<String> updateProduct(){
 
-        return ResponseEntity.status(HttpStatus.OK).body("Product updated");
+        return updateProductService.execute(null);
     }
 
     @DeleteMapping
     public ResponseEntity<String> deleteProduct(){
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Product deleted");
+        return deleteProductService.execute(null);
     }
 }
