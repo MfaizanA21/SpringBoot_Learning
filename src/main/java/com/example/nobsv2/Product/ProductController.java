@@ -1,47 +1,58 @@
 package com.example.nobsv2.Product;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.example.nobsv2.Product.Model.Product;
+import com.example.nobsv2.Product.Model.ProductDTO;
+import com.example.nobsv2.Product.Model.UpdateProductCommand;
+import com.example.nobsv2.Product.Services.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ProductController {
 
 
     private final CreateProductService createProductService;
-    private final GetProductService getProductService;
+    private final GetProductsService getProductsService;
     private final UpdateProductService updateProductService;
     private final DeleteProductService deleteProductService;
+    private final GetProductService getProductService;
 
-    public ProductController(CreateProductService createProductService, GetProductService getProductService, UpdateProductService updateProductService, DeleteProductService deleteProductService) {
+    public ProductController(CreateProductService createProductService, GetProductsService getProductsService, UpdateProductService updateProductService, DeleteProductService deleteProductService, GetProductService getProductService) {
         this.createProductService = createProductService;
-        this.getProductService = getProductService;
+        this.getProductsService = getProductsService;
         this.updateProductService = updateProductService;
         this.deleteProductService = deleteProductService;
+        this.getProductService = getProductService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> createProduct(){
+    @PostMapping("/product")
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody Product product){
 
-        return createProductService.execute(null);
+        return createProductService.execute(product);
     }
 
-    @GetMapping
-    public ResponseEntity<String> getProduct(){
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDTO>> getProducts(){
 
-        return getProductService.execute(null);
+        return getProductsService.execute(null);
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateProduct(){
-
-        return updateProductService.execute(null);
+    @GetMapping("/product/{id}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Integer id) {
+        return getProductService.execute(id);
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteProduct(){
+    @PutMapping("/product/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Integer id, @RequestBody Product product){
 
-        return deleteProductService.execute(null);
+        return updateProductService.execute(new UpdateProductCommand(id, product));
+    }
+
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id){
+
+        return deleteProductService.execute(id);
     }
 }
